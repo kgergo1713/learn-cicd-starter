@@ -38,6 +38,10 @@ jobs:
       - name: Print current account
         run: gcloud auth list --filter=status:ACTIVE --format="value(account)"
 
+
+      - name: Check bucket permissions
+        run: gsutil ls -L gs://notely-432608_cloudbuild
+
       - name: Verify permissions
         run: |
           gcloud projects get-iam-policy notely-432608 --flatten="bindings[].members" --format='table(bindings.role)' --filter="bindings.members:cloud-run-deployer@notely-432608.iam.gserviceaccount.com"
