@@ -28,7 +28,7 @@ var staticFiles embed.FS
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
-		log.Fatal("PORT environment variable is not set")
+		port = "8080" //default to 8080 if PORT is not set
 	}
 
 	apiCfg := apiConfig{}
