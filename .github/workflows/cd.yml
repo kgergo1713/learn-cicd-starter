@@ -45,9 +45,10 @@ jobs:
       - name: Check current permissions
         run: gcloud auth list --format="value(account)"
 
-      - name: Verify permissions
+      - name: Check build permissions
         run: |
-          gcloud projects get-iam-policy notely-432608 --flatten="bindings[].members" --format='table(bindings.role)' --filter="bindings.members:cloud-run-deployer@notely-432608.iam.gserviceaccount.com"
+          gcloud builds list --limit=1
+          gcloud run services list
 
       - name: Build and push Docker image
         run:  gcloud builds submit --verbosity=debug --tag us-central1-docker.pkg.dev/notely-432608/notely-ar-repo/my-image:latest
