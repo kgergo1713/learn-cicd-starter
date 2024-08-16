@@ -12,7 +12,6 @@ import (
 	"time"
 
 	"github.com/go-chi/chi"
-	"github.com/joho/godotenv"
 
 	"github.com/bootdotdev/learn-cicd-starter/internal/database"
 
