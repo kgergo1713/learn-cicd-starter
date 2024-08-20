@@ -34,6 +34,7 @@ func main() {
 	apiCfg := apiConfig{}
 
 	dbURL := os.Getenv("DATABASE_URL")
+	fmt.Println("DATABASE_URL:", dbURL)
 	if dbURL == "" {
 		log.Println("DATABASE_URL environment variable is not set")
 		log.Println("Running without CRUD endpoints")
