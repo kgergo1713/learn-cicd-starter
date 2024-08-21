@@ -103,4 +103,3 @@ func addParseTimeParam(input string) (string, error) {
 	returnUrl := u.String()
 	returnUrl = strings.TrimPrefix(returnUrl, dummyScheme)
 	return returnUrl, nil
-}
