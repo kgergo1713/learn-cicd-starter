@@ -29,9 +29,9 @@ var staticFiles embed.FS
 
 // LogEntry represents a log entry
 type LogEntry struct {
-	Timestamp   time.Time   `json:"timestamp"`
-	TextPayload string      `json:"textPayload"`
-	Severity    string      `json:"severity,omitempty"`
+	Timestamp   time.Time    `json:"timestamp"`
+	TextPayload string       `json:"textPayload"`
+	Severity    string       `json:"severity,omitempty"`
 	HTTPRequest *HTTPRequest `json:"httpRequest,omitempty"`
 }
 
@@ -65,6 +65,10 @@ func main() {
 		db, err := sql.Open("postgres", parsedURL)
 		if err != nil {
 			log.Fatal(err)
+		}
+		err = db.Ping()
+		if err != nil {
+			log.Fatalf("Could not connect to the database: %v", err)
 		}
 		dbQueries := database.New(db)
 		apiCfg.DB = dbQueries
