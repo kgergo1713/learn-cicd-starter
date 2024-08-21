@@ -145,10 +145,18 @@ func parseLogs(filePath string) {
 				continue
 			}
 			fmt.Printf("Parsed Log Entry: %+v\n", logEntry)
+			if strings.Contains(logEntry.TextPayload, "connection refused") {
+				handleConnectionRefused(logEntry)
+			}
 		}
 	}
 
 	if err := scanner.Err(); err != nil {
 		fmt.Println("Error reading file:", err)
 	}
+}
+
+func handleConnectionRefused(logEntry LogEntry) {
+	fmt.Println("Handling connection refused error:", logEntry.TextPayload)
+	// Add your error handling logic here
 }
