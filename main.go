@@ -1,22 +1,17 @@
 package main
 
 import (
-	"bufio"
 	"database/sql"
 	"embed"
-	"encoding/json"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
-	"net/url"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/go-chi/chi"
 	"github.com/bootdotdev/learn-cicd-starter/internal/database"
-
 	_ "github.com/lib/pq" // Import the PostgreSQL driver
 )
 
@@ -26,23 +21,6 @@ type apiConfig struct {
 
 //go:embed static/*
 var staticFiles embed.FS
-
-// LogEntry represents a log entry
-type LogEntry struct {
-	Timestamp   time.Time    `json:"timestamp"`
-	TextPayload string       `json:"textPayload"`
-	Severity    string       `json:"severity,omitempty"`
-	HTTPRequest *HTTPRequest `json:"httpRequest,omitempty"`
-}
-
-// HTTPRequest represents HTTP request details in a log entry
-type HTTPRequest struct {
-	RequestMethod string `json:"requestMethod"`
-	RequestURL    string `json:"requestUrl"`
-	Status        int    `json:"status"`
-	UserAgent     string `json:"userAgent"`
-	RemoteIP      string `json:"remoteIp"`
-}
 
 func main() {
 	port := os.Getenv("PORT")
@@ -126,41 +104,4 @@ func addParseTimeParam(input string) (string, error) {
 	returnUrl := u.String()
 	returnUrl = strings.TrimPrefix(returnUrl, dummyScheme)
 	return returnUrl, nil
-}
-
-func parseLogs(filePath string) {
-	file, err := os.Open(filePath)
-	if err != nil {
-		fmt.Println("Error opening file:", err)
-		return
-	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		line := scanner.Text()
-		if strings.Contains(line, "Connected to database!") || strings.Contains(line, "Serving on port:") {
-			fmt.Println("Info:", line)
-		} else if strings.Contains(line, "POST") || strings.Contains(line, "ERROR") {
-			var logEntry LogEntry
-			err := json.Unmarshal([]byte(line), &logEntry)
-			if err != nil {
-				fmt.Println("Error parsing log entry:", err)
-				continue
-			}
-			fmt.Printf("Parsed Log Entry: %+v\n", logEntry)
-			if strings.Contains(logEntry.TextPayload, "connection refused") {
-				handleConnectionRefused(logEntry)
-			}
-		}
-	}
-
-	if err := scanner.Err(); err != nil {
-		fmt.Println("Error reading file:", err)
-	}
-}
-
-func handleConnectionRefused(logEntry LogEntry) {
-	fmt.Println("Handling connection refused error:", logEntry.TextPayload)
-	// Add your error handling logic here
 }
