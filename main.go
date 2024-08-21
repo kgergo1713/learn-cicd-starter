@@ -3,17 +3,16 @@ package main
 import (
 	"database/sql"
 	"embed"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"net/url"
-	"fmt"
 	"os"
 	"strings"
 	"time"
 
 	"github.com/go-chi/chi"
-
 	"github.com/bootdotdev/learn-cicd-starter/internal/database"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -29,7 +28,7 @@ var staticFiles embed.FS
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8080" //default to 8080 if PORT is not set
+		port = "8080" // default to 8080 if PORT is not set
 	}
 
 	apiCfg := apiConfig{}
