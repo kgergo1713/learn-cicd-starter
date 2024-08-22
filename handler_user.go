@@ -27,7 +27,7 @@ func (cfg *apiConfig) handlerUsersCreate(w http.ResponseWriter, r *http.Request)
 
 	apiKey, err := generateRandomSHA256Hash()
 	if err != nil {
-		respondWithError(w, http.StatusInternalServerError, "Couldn't generate API key")
+		respondWithError(w, http.StatusInternalServerError, "Couldn't gen apikey")
 		return
 	}
 
@@ -72,6 +72,7 @@ func generateRandomSHA256Hash() (string, error) {
 }
 
 func (cfg *apiConfig) handlerUsersGet(w http.ResponseWriter, r *http.Request, user database.User) {
+
 	userResp, err := databaseUserToUser(user)
 	if err != nil {
 		log.Println(err)
